@@ -95,7 +95,8 @@ const CRC = {
                 crc = (crc & 0x8000) > 0 ? (crc << 1) ^ 0x1021 : crc << 1;
             }
         }
-        return (crc & 0xFFFF).toString(16).toUpperCase();
+        let crc_result = (crc & 0xFFFF).toString(16).toUpperCase();
+        return crc_result.length >= 4 ? crc_result :`0${crc_result}`;
     },
 
 
@@ -130,9 +131,12 @@ const CRC = {
                 }
             });
             crc &= 0xffff;
+
             return hex_output ? crc.toString(16).toUpperCase() : crc;
         }));
-        return result.toString();
+        // add padding left if result length < 4 characters
+        let crc_result = result.toString()
+        return  crc_result.length >= 4 ? crc_result :`0${crc_result}`;
     },
 
 
@@ -223,7 +227,6 @@ const VIETQR=class {
         }
         let semi_vietqr = `${str}6304`
         let crc_value = CRC.getCrc16_array(semi_vietqr)
-        crc_value = crc_value.length < 4 ? crc_value : `0${crc_value}`
         return `${semi_vietqr}${crc_value}`
     }
 
